@@ -37,12 +37,12 @@ const routes = [
 //     component: () => import('../views/About.vue'),
 //     meta: { title: 'О нас | be MATYR' }
 //   },
-//   {
-//     path: '/gallery',
-//     name: 'Gallery',
-//     component: () => import('../views/Gallery.vue'),
-//     meta: { title: 'Галерея | be MATYR' }
-//   },
+  {
+    path: '/gallery',
+    name: 'Gallery',
+    component: () => import('../views/Gallery.vue'),
+    meta: { title: 'Галерея | be MATYR' }
+  },
 //   {
 //     path: '/admin',
 //     name: 'Admin',

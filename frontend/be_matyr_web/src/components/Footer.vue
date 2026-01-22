@@ -73,7 +73,7 @@ export default {
 
 <style scoped>
 .footer {
-  background: var(--primary-dark);
+  background: #292929;
   color: white;
   padding: 4rem 0 2rem;
   margin-top: auto;

@@ -2,6 +2,36 @@
   <div class="home">
     <!-- Hero Section -->
     <section class="hero">
+      <!-- Контейнер для слайдера -->
+      <div class="hero-slider">
+        <!-- Слайды -->
+        <div 
+          class="slide" 
+          v-for="(slide, index) in slides" 
+          :key="slide.id"
+          :class="{ active: currentSlide === index }"
+          :style="{ backgroundImage: `url(${slide.image})` }"
+        >
+          <div class="slide-overlay"></div>
+        </div>
+        
+        <!-- Навигация -->
+        <button class="slider-btn prev" @click="prevSlide">‹</button>
+        <button class="slider-btn next" @click="nextSlide">›</button>
+        
+        <!-- Индикаторы -->
+        <div class="slider-indicators">
+          <button
+            v-for="(slide, index) in slides"
+            :key="slide.id"
+            class="indicator"
+            :class="{ active: currentSlide === index }"
+            @click="goToSlide(index)"
+            :aria-label="`Перейти к слайду ${index + 1}`"
+          ></button>
+        </div>
+      </div>
+
       <div class="container">
         <div class="hero-content">
           <h1 class="hero-title">
@@ -88,11 +118,78 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue' // ИСПРАВЛЕНО: добавлены хуки
+
+// Импортируем изображения из assets
+import slider1 from '@/assets/images/slider1.jpg'
+import slider2 from '@/assets/images/slider2.jpg'
+import slider3 from '@/assets/images/slider3.jpg'
 
 export default {
   name: 'Home',
   setup() {
+    const currentSlide = ref(0)
+    const interval = ref(null)
+    
+    // Массив слайдов с локальными изображениями
+    const slides = ref([
+      {
+        id: 1,
+        image: slider1,
+        alt: 'Интерьер парикмахерской be MATYR'
+      },
+      {
+        id: 2,
+        image: slider2,
+        alt: 'Работа мастера в парикмахерской'
+      },
+      {
+        id: 3,
+        image: slider3,
+        alt: 'Счастливый клиент после стрижки'
+      }
+    ])
+    
+    // Переход к следующему слайду
+    const nextSlide = () => {
+      currentSlide.value = (currentSlide.value + 1) % slides.value.length
+    }
+    
+    // Переход к предыдущему слайду
+    const prevSlide = () => {
+      currentSlide.value = currentSlide.value === 0 
+        ? slides.value.length - 1 
+        : currentSlide.value - 1
+    }
+    
+    // Прямой переход к слайду
+    const goToSlide = (index) => {
+      currentSlide.value = index
+    }
+    
+    // Автопрокрутка слайдов
+    const startAutoSlide = () => {
+      interval.value = setInterval(nextSlide, 8000)
+    }
+    
+    // Остановка автопрокрутки при наведении
+    const stopAutoSlide = () => {
+      if (interval.value) {
+        clearInterval(interval.value)
+        interval.value = null
+      }
+    }
+    
+    // Инициализация
+    onMounted(() => {
+      startAutoSlide()
+    })
+    
+    // Очистка при размонтировании
+    onUnmounted(() => {
+      stopAutoSlide()
+    })
+
     const previewServices = ref([
       {
         id: 'mens',
@@ -120,21 +217,73 @@ export default {
       }
     ])
     
-    return { previewServices }
+    return { 
+      currentSlide,
+      slides,
+      nextSlide,
+      prevSlide,
+      goToSlide,
+      startAutoSlide,
+      stopAutoSlide,
+      previewServices 
+    }
   }
 }
 </script>
 
 <style scoped>
+.home {
+  min-height: 100vh;
+}
+
 .hero {
-  background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-              url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1600') center/cover;
-  color: white;
+  position: relative;
+  color: white; /* ИСПРАВЛЕНО: было красным */
   padding: 8rem 0;
   text-align: center;
+  overflow: hidden;
+  min-height: 600px;
+}
+
+.hero-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}
+
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+.slide-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  mix-blend-mode: multiply;
 }
 
 .hero-content {
+  position: relative;
+  z-index: 2;
   max-width: 800px;
   margin: 0 auto;
 }
@@ -145,6 +294,7 @@ export default {
   font-weight: 600;
   margin-bottom: 1.5rem;
   line-height: 1.2;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .hero-accent {
@@ -154,10 +304,79 @@ export default {
 .hero-subtitle {
   font-size: 1.2rem;
   margin-bottom: 3rem;
-  opacity: 0.9;
+  opacity: 0.95;
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Кнопки слайдера */
+.slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  font-size: 2rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 3;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slider-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.slider-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.slider-btn.prev {
+  left: 20px;
+}
+
+.slider-btn.next {
+  right: 20px;
+}
+
+/* Индикаторы */
+.slider-indicators {
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  z-index: 3;
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid white;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+.indicator:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.indicator.active {
+  background: var(--primary-light);
+  border-color: var(--primary-light);
 }
 
 .hero-actions {
@@ -165,6 +384,48 @@ export default {
   gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+/* Анимация для текста при смене слайда */
+.hero-content {
+  animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Стили для остальных секций */
+.section {
+  padding: 80px 0;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: var(--primary-dark);
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background: var(--primary-green);
 }
 
 .services-grid {
@@ -265,9 +526,34 @@ export default {
   opacity: 0.9;
 }
 
+/* Адаптивность */
 @media (max-width: 768px) {
+  .hero {
+    padding: 6rem 0;
+    min-height: 500px;
+  }
+  
   .hero-title {
     font-size: 2.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.1rem;
+    padding: 0 1rem;
+  }
+  
+  .slider-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+  }
+  
+  .slider-btn.prev {
+    left: 10px;
+  }
+  
+  .slider-btn.next {
+    right: 10px;
   }
   
   .hero-actions {
@@ -278,6 +564,38 @@ export default {
   .hero-actions .btn {
     width: 100%;
     max-width: 300px;
+  }
+  
+  .section {
+    padding: 60px 0;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 4rem 0;
+    min-height: 400px;
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .slider-indicators {
+    bottom: 20px;
+  }
+  
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 }
 </style>

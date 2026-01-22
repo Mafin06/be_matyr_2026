@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar">
+  <nav class="navbar" :class="{ 'scrolled': isScrolled }">
     <div class="container">
       <div class="navbar-content">
         <router-link to="/" class="logo">
@@ -32,12 +32,13 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 export default {
   name: 'Navigation',
   setup() {
     const menuOpen = ref(false)
+    const isScrolled = ref(false)
     
     const toggleMenu = () => {
       menuOpen.value = !menuOpen.value
@@ -47,7 +48,26 @@ export default {
       menuOpen.value = false
     }
     
-    return { menuOpen, toggleMenu, closeMenu }
+    const handleScroll = () => {
+      isScrolled.value = window.scrollY > 50
+    }
+    
+    onMounted(() => {
+      window.addEventListener('scroll', handleScroll)
+      // Проверяем начальную позицию скролла
+      handleScroll()
+    })
+    
+    onUnmounted(() => {
+      window.removeEventListener('scroll', handleScroll)
+    })
+    
+    return { 
+      menuOpen, 
+      isScrolled,
+      toggleMenu, 
+      closeMenu 
+    }
   }
 }
 </script>
@@ -62,6 +82,13 @@ export default {
   box-shadow: var(--shadow-sm);
   z-index: 1000;
   padding: 1rem 0;
+  transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+  background: #292929;
+  padding: 0.8rem 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .navbar-content {
@@ -76,10 +103,20 @@ export default {
   font-weight: 600;
   text-decoration: none;
   color: var(--text-dark);
+  transition: color 0.3s ease;
+}
+
+.navbar.scrolled .logo {
+  color: white;
 }
 
 .logo-accent {
   color: var(--primary-green);
+  transition: color 0.3s ease;
+}
+
+.navbar.scrolled .logo-accent {
+  color: #4CAF50; /* Более светлый зеленый для темного фона */
 }
 
 .nav-links {
@@ -92,7 +129,7 @@ export default {
   text-decoration: none;
   color: var(--text-light);
   font-weight: 500;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
   position: relative;
 }
 
@@ -112,12 +149,38 @@ export default {
   width: 100%;
   height: 2px;
   background: var(--primary-green);
+  transition: background-color 0.3s ease;
+}
+
+/* Стили для темного состояния при скролле */
+.navbar.scrolled .nav-links a {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.navbar.scrolled .nav-links a:hover {
+  color: var(--primary-light);
+}
+
+.navbar.scrolled .nav-links a.router-link-active {
+  color: var(--primary-light);
+}
+
+.navbar.scrolled .nav-links a.router-link-active::after {
+  background: var(--primary-light);
 }
 
 .nav-actions {
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+
+.navbar.scrolled .btn-primary {
+  background: var(--primary-light);
+}
+
+.navbar.scrolled .btn-primary:hover {
+  background: var(--primary-green);
 }
 
 .menu-toggle {
@@ -135,6 +198,10 @@ export default {
   height: 2px;
   background: var(--primary-green);
   transition: 0.3s;
+}
+
+.navbar.scrolled .menu-toggle span {
+  background: white;
 }
 
 @media (max-width: 768px) {
@@ -155,6 +222,15 @@ export default {
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s ease;
+  }
+  
+  .navbar.scrolled .nav-links {
+    background: #292929;
+    top: 65px;
+  }
+  
+  .navbar.scrolled .nav-links a {
+    color: rgba(255, 255, 255, 0.9);
   }
   
   .nav-links.active {
