@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <Navigation v-if="showNav" />
+    <Navigation />
     <main>
       <router-view />
     </main>
-    <Footer />
+    <Footer/>
   </div>
 </template>
 
@@ -20,17 +20,22 @@ export default {
     Navigation,
     Footer
   },
-  setup() {
-    const route = useRoute()
-    const showNav = ref(true)
-    
-    watch(() => route.path, (path) => {
-      // Скрываем навигацию на некоторых страницах (например, админка)
-      showNav.value = !path.includes('/admin')
-    })
-    
-    return { showNav }
-  }
+  // setup() {
+  //   const route = useRoute()
+  //   const showNav = ref(true)
+  //   const showFoot = ref(true)
+  //   // Проверяем, находимся ли мы в админке
+  //   const isAdminRoute = computed(() => {
+  //     return route.path.startsWith('/admin')
+  //   })
+  //   watch(() => route.path, (path) => {
+  //     // Скрываем навигацию на некоторых страницах (например, админка)
+  //     showNav.value = !path.includes('/admin')
+  //     showFoot.value = !path.includes('/admin')
+  //   })
+  //   return { showNav, showFoot }
+  //   // return { showNav, isAdminRoute }
+  // }
 }
 </script>
 
