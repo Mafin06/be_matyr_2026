@@ -26,6 +26,7 @@
               <div class="founder-image">
                 <div class="image-placeholder">
                   <div class="placeholder-icon">👑</div>
+                  <!-- <img :src="require('@/assets/images/ip2.jpg')" alt="ip2"> -->
                 </div>
                 <div class="founder-badge">
                   <span>Основатель</span>

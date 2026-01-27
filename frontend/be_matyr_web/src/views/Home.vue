@@ -122,9 +122,8 @@ import { ref, onMounted, onUnmounted } from 'vue' // ИСПРАВЛЕНО: до�
 
 // Импортируем изображения из assets
 import slider1 from '@/assets/images/slider1.jpg'
-import slider2 from '@/assets/images/slider2.jpg'
-import slider3 from '@/assets/images/slider3.jpg'
-
+import slider2 from '@/assets/images/slider3.jpg'
+import slider3 from "@/assets/images/slider_fon_desktop.png"
 export default {
   name: 'Home',
   setup() {
@@ -140,12 +139,12 @@ export default {
       },
       {
         id: 2,
-        image: slider2,
+        image: slider3,
         alt: 'Работа мастера в парикмахерской'
       },
       {
         id: 3,
-        image: slider3,
+        image: slider2,
         alt: 'Счастливый клиент после стрижки'
       }
     ])

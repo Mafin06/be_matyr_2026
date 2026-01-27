@@ -52,15 +52,15 @@ export default {
       isScrolled.value = window.scrollY > 50
     }
     
-    onMounted(() => {
-      window.addEventListener('scroll', handleScroll)
-      // Проверяем начальную позицию скролла
-      handleScroll()
-    })
+    // onMounted(() => {
+    //   window.addEventListener('scroll', handleScroll)
+    //   // Проверяем начальную позицию скролла
+    //   handleScroll()
+    // })
     
-    onUnmounted(() => {
-      window.removeEventListener('scroll', handleScroll)
-    })
+    // onUnmounted(() => {
+    //   window.removeEventListener('scroll', handleScroll)
+    // })
     
     return { 
       menuOpen, 
@@ -78,17 +78,11 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  background: var(--bg-white);
-  box-shadow: var(--shadow-sm);
+  background: #292929;;
   z-index: 1000;
-  padding: 1rem 0;
-  transition: all 0.3s ease;
-}
-
-.navbar.scrolled {
-  background: #292929;
   padding: 0.8rem 0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
 }
 
 .navbar-content {
@@ -102,21 +96,13 @@ export default {
   font-size: 2rem;
   font-weight: 600;
   text-decoration: none;
-  color: var(--text-dark);
-  transition: color 0.3s ease;
-}
-
-.navbar.scrolled .logo {
   color: white;
+  transition: color 0.3s ease;
 }
 
 .logo-accent {
-  color: var(--primary-green);
+  color: #4CAF50;
   transition: color 0.3s ease;
-}
-
-.navbar.scrolled .logo-accent {
-  color: #4CAF50; /* Более светлый зеленый для темного фона */
 }
 
 .nav-links {
@@ -127,18 +113,18 @@ export default {
 
 .nav-links a {
   text-decoration: none;
-  color: var(--text-light);
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 500;
   transition: all 0.3s ease;
   position: relative;
 }
 
 .nav-links a:hover {
-  color: var(--primary-green);
+  color: var(--primary-light);
 }
 
 .nav-links a.router-link-active {
-  color: var(--primary-green);
+  color: var(--primary-light);
 }
 
 .nav-links a.router-link-active::after {
@@ -148,25 +134,8 @@ export default {
   left: 0;
   width: 100%;
   height: 2px;
-  background: var(--primary-green);
-  transition: background-color 0.3s ease;
-}
-
-/* Стили для темного состояния при скролле */
-.navbar.scrolled .nav-links a {
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.navbar.scrolled .nav-links a:hover {
-  color: var(--primary-light);
-}
-
-.navbar.scrolled .nav-links a.router-link-active {
-  color: var(--primary-light);
-}
-
-.navbar.scrolled .nav-links a.router-link-active::after {
   background: var(--primary-light);
+  transition: background-color 0.3s ease;
 }
 
 .nav-actions {
@@ -175,11 +144,11 @@ export default {
   gap: 1rem;
 }
 
-.navbar.scrolled .btn-primary {
+.navbar .btn-primary {
   background: var(--primary-light);
 }
 
-.navbar.scrolled .btn-primary:hover {
+.navbar.btn-primary:hover {
   background: var(--primary-green);
 }
 
@@ -196,13 +165,10 @@ export default {
 .menu-toggle span {
   width: 25px;
   height: 2px;
-  background: var(--primary-green);
+  background: white;
   transition: 0.3s;
 }
 
-.navbar.scrolled .menu-toggle span {
-  background: white;
-}
 
 @media (max-width: 768px) {
   .menu-toggle {
@@ -214,7 +180,7 @@ export default {
     top: 70px;
     left: 0;
     right: 0;
-    background: var(--bg-white);
+    background: #292929;
     flex-direction: column;
     padding: 2rem;
     box-shadow: var(--shadow-md);
@@ -224,14 +190,10 @@ export default {
     transition: all 0.3s ease;
   }
   
-  .navbar.scrolled .nav-links {
-    background: #292929;
+  .navbar.nav-links {
     top: 65px;
   }
   
-  .navbar.scrolled .nav-links a {
-    color: rgba(255, 255, 255, 0.9);
-  }
   
   .nav-links.active {
     transform: translateY(0);

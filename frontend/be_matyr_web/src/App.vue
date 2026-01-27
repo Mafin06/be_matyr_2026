@@ -79,7 +79,7 @@ body {
 
 main {
   flex: 1;
-  padding-top: 80px; /* Для фиксированной навигации */
+  padding-top: 77.8px; /* Для фиксированной навигации */
 }
 
 .container {
