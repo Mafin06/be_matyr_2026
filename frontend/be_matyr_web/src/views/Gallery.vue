@@ -291,7 +291,8 @@
 
 <script>
 import { ref, computed, onMounted } from 'vue'
-
+// Импорт изображений для галереи
+import test from '@/assets/images/test.jpg'
 export default {
   name: 'Gallery',
   setup() {
@@ -314,7 +315,7 @@ export default {
         master: "Алексей Иванов",
         masterSlug: "alexey-ivanov",
         date: "15.12.2023",
-        image: "https://daviani.ru/upload/malvinka.jpg",
+        image: test,
         likes: 42,
         liked: false,
         description: "Современная мужская стрижка с градуировкой и текстурой. Мастер создал индивидуальный стиль с учетом структуры волос и формы лица.",
